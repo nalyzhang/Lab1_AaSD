@@ -1,5 +1,3 @@
-#ifndef LAB2_2_FILES_H
-#define LAB2_2_FILES_H
 #include <fstream>
 #include "StrL.h"
 #include "list.h"
@@ -28,15 +26,13 @@ public:
 
     void readIn(list& list);
 
-    void printList(list list);
-
     list inputNewList();
 
-    void fuction1(list &list);
+    void function1(list &list);
 
-    void fuction2(list &list);
+    void function2(list &list);
 
-    void fuction3(list &list);
+    void function3(list &list);
 
     void function4(list &list);
 

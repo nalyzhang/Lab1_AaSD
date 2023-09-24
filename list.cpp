@@ -42,8 +42,8 @@ void list::pop_back() {
         head = tail = NULL;
         return;
     }
-    StrL* node = head;
-    for(; node->getNext(); node = node->getNext());
+    StrL* node;
+    for(node = head; node->getNext()->getNext() != NULL; node = node->getNext());
     node->setNext(NULL);
     delete tail;
     tail = node;

@@ -1,6 +1,8 @@
 #include <iostream>
+#include "files.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    files f;
+    f.result();
     return 0;
 }

@@ -3,4 +3,4 @@ project(l1_3)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(l1_3 main.cpp files.cpp list.cpp StrL.cpp)
+add_executable(l1_3 main.cpp files.cpp list.cpp StrL.cpp main.cpp)

@@ -6,7 +6,6 @@
 class list {
 private:
     StrL* head;
-    StrL* tail;
 
 public:
     list(){
@@ -37,9 +36,9 @@ public:
 
     void push_front(int data);
 
-    void push_front(int data);
-
     void pop_back();
+
+    StrL* tail;
 };
 
 #endif
