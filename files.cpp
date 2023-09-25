@@ -24,11 +24,11 @@
  */
 
 void files::readIn(list& list) {
-    if (this->in.is_open() == 1) {
+    if (this->inList.is_open() == 1) {
         int node;
-        if (this->in.eof() == 0) {
-            while(this->in.eof() == 0) {
-                this->in >> node;
+        if (this->inList.eof() == 0) {
+            while(this->inList.eof() == 0) {
+                this->inList >> node;
                 list.push_back(node);
             }
         }
@@ -106,14 +106,14 @@ void files::function7(list& list) {
 int files::function8(list &list) {
     std::cout << "\t8\tполучение размера списка\n";
     int count;
-    for (StrL* node = list.getHead(); node->getNext() != NULL; node = node->getNext())
-        count++;
+    for (StrL* node = list.head; node != NULL; node = node->next)
+        ++count;
     return count;
 }
 
 void files::function9(list &list) {
     std::cout << "\t9\tудаление всех элементов списка\n";
-    while(list.getHead() != NULL) list.pop_front();
+    while(list.head != NULL) list.pop_front();
 }
 
 void files::function10(list &list) {
@@ -130,24 +130,23 @@ void files::function10(list &list) {
 
 void files::function11(list &list) {
     std::cout << "\t11\tпроверка на пустоту списка\n";
-    if (list.getHead() == NULL) std::cout << "Список пуст" << std::endl;
+    if (list.head == NULL) std::cout << "Список пуст" << std::endl;
     else std::cout << "Список не пуст" << std::endl;
 }
 
 void files::function12(list& list) {
     //todo: переделать функцию
     std::cout << "\t12\tменяет порядок элементов в списке на обратный\n";
-    StrL *curr, *next, *prev;
-    prev = list.getHead();
-    list.setHead(list.getTail());
-    curr = prev->getNext();
-    while (curr != NULL) {
-        next = curr->getNext();
-        curr->setNext(prev);
+    StrL *curr, *next, *prev = NULL;
+    list.tail = list.head;
+    curr = list.head;
+    while (curr) {
+        next = curr->next;
+        curr->next = prev;
         prev = curr;
         curr = next;
     }
-    list.setHead(list.getTail());
+    list.head = prev;
 }
 
 void files::function13(list& lst){
@@ -155,32 +154,159 @@ void files::function13(list& lst){
                  "Введите номер элемента, после которого хотите вставить список" << std::endl;
     int k;
     std::cin >> k;
+    if (k > function8(lst) || k < 0) {
+        std::cout << "Элемента с таким индексом не существует" << std::endl;
+        return;
+    }
     list newList = inputNewList();
-    StrL* node = lst.getAt(k);
-    //todo вставка
-    newList.getTail()->setNext(node->getNext());
-    node->setNext(newList.getHead());
+    if (newList.head == NULL) {
+        std::cout << "Ввдеденный список пуст";
+        return;
+    }
+
+    int i = 0;
+    for (StrL* node = newList.head; node!= NULL; node = node->next) lst.insert(k+i++, node->data);
 }
 
 void files::function14(list& lst){
     std::cout << "\t14\tвставка другого списка в конец\n";
     list newList = inputNewList();
-    //todo вставка в хвост
-    lst.tail->setNext(newList.getHead());
-    lst.setTail(newList.getTail());
+    for (StrL* node = newList.head; node!= NULL; node = node->next) lst.push_back(node->data);
 }
 
 void files::function15(list& lst){
     std::cout << "\t15\tвставка другого списка в начало\n";
     list newList = inputNewList();
-    //todo вставка в начало
-    newList.getTail()->setNext(lst.getHead());
-    lst.setHead(newList.getHead());
+    int i = -1;
+    for (StrL* node = newList.head; node!= NULL; node = node->next) lst.insert(i++, node->data);
+}
+
+void files::function16(list& lst){
+    std::cout << "\t16\tпроверка на содержание другого списка в списке, можно сделать целочисленного типа\n";
+    list newList = inputNewList();
+    StrL* curr = newList.head;
+    int count = 0, lenNewList = function8(newList), lenList = function8(lst);
+    if (lenList < lenNewList) {
+        std::cout << "Заданный список не может входить в данный в силу большего размера" << std::endl;
+        return;
+    }
+    for (StrL* node = lst.head; node != nullptr; node = node->next){
+        if (curr == nullptr)
+        {
+            std::cout << "Список входит в данный" << std::endl;
+            return;
+        }
+        if (curr->data == node->data) {
+            count++;
+            curr = curr->next;
+        }
+        else {
+            if (count == lenNewList) {
+                std::cout << "Список входит в данный" << std::endl;
+                return;
+            }
+            else {
+                count = 0;
+                curr = newList.head;
+            }
+        }
+    }
+    std::cout << "Список не входит в данный" << std::endl;
+}
+
+void files::function17(list& lst) {
+    std::cout << "\t17\tпоиск первого вхождения другого списка в список\n";
+    list newList = inputNewList();
+    StrL *curr = newList.head;
+    int count = 0, lenNewList = function8(newList), lenList = function8(lst), n = -1, i = 0;
+    bool flag = true;
+    if (lenList < lenNewList) {
+        std::cout << "Заданный список не может входить в данный в силу большего размера" << std::endl;
+        return;
+    }
+    for (StrL *node = lst.head; node != nullptr; node = node->next) {
+        if (curr == nullptr) {
+            std::cout << "Первое вхождение списка в данный начинается с индекса " << n << std::endl;
+            return;
+        }
+        if (curr->data == node->data) {
+            if (flag) {
+                n = i;
+                flag = false;
+            }
+            count++;
+            curr = curr->next;
+        } else {
+            if (count == lenNewList) {
+                std::cout << "Первое вхождение списка в данный начинается с индекса " << n << std::endl;
+                return;
+            } else {
+                count = 0;
+                curr = newList.head;
+                flag = true;
+            }
+        }
+        i++;
+    }
+    std::cout << "Список не входит в данный" << std::endl;
+}
+
+void files::function18(list& lst){
+    std::cout << "\t18\tпоиск последнего вхождения другого списка в список\n";
+    list newList = inputNewList();
+    StrL *curr = newList.head;
+    int count = 0, lenNewList = function8(newList), lenList = function8(lst), n = -1, i = 0;
+    bool flag = true;
+    if (lenList < lenNewList) {
+        std::cout << "Заданный список не может входить в данный в силу большего размера" << std::endl;
+        return;
+    }
+    for (StrL *node = lst.head; node != nullptr; node = node->next) {
+        i++;
+        if (curr == nullptr || (curr->data != node->data)) {
+            count = 0;
+            curr = newList.head;
+            flag = true;
+            continue;
+        }
+        if (curr->data == node->data) {
+            if (flag) {
+                n = i-1;
+                flag = false;
+            }
+            count++;
+            curr = curr->next;
+        }
+    }
+    if (n >= 0) std::cout << "Последнее вхождение списка в данный начинается с индекса " << n << std::endl;
+    else std::cout << "Список не входит в данный" << std::endl;
+}
+
+void files::function19(list& lst){
+    int first, second;
+    std::cout << "\t19\tобмен двух элементов списка по индексам\n"
+                 "Введите номер первого элемента:" << std::endl;
+    std::cin >> first;
+    std::cout << "Введите номер второго элемента: " << std::endl;
+    std::cin >> second;
+    StrL *firstNode, *secondNode;
+    firstNode = lst.getAt(first);
+    secondNode = lst.getAt(second);
+    if (firstNode != NULL && secondNode != NULL) {
+        int tmp = firstNode->data;
+        firstNode->data = secondNode->data;
+        secondNode->data = tmp;
+    }
 }
 
 void files::result() {
     list lst;
     this->readIn(lst);
+    std::cout << "Список:";
+    for (StrL *node = lst.head; node != nullptr; node = node->next) {
+        std::cout << node->getData() << " ";
+    }
+    std::cout << "\n";
     std::cout << "Ниже представлен список функций, с которыми работает данная программа:"
                  "\n\t1\tдобавление в конец списка\n"
                  "\t2\tдобавление в начало списка\n"
@@ -207,6 +333,7 @@ void files::result() {
     std::cin >> numOfOperation;
     while (numOfOperation != 20){
         std::cout << "Была выбрана функция: ";
+        unsigned int start_time =  clock(); // начальное время
         switch (numOfOperation) {
             case(1):
                 function1(lst);
@@ -235,7 +362,7 @@ void files::result() {
             case(8):
             {
                 auto count = function8(lst);
-                std::cout << "Было получено значение:" << count << std::endl;
+                std::cout << "Было получено значение: " << count << std::endl;
             }
                 break;
             case(9):
@@ -260,33 +387,41 @@ void files::result() {
             case(15):
                 function15(lst);
                 break;
-//            case(16):
-//                break;
-//            case(17):
-//                break;
-//            case(18):
-//                break;
-//            case(19):
-//                break;
+            case(16):
+                function16(lst);
+                break;
+            case(17):
+                function17(lst);
+                break;
+            case(18):
+                function18(lst);
+                break;
+            case(19):
+                function19(lst);
+                break;
             case(20):
                 std::cout << "Конечный список:" << std::endl;
-                for (StrL *node = lst.getHead(); node != nullptr; node = node->getNext()) {
-                    this->out << node->getData() << " ";
+                for (StrL *node = lst.head; node != nullptr; node = node->next) {
+                    this->outList << node->getData() << " ";
                 }
-                this->out << std::endl;
+                this->outList << std::endl;
                 std::cout << "выход из программы.\n";
                 break;
             default:
                 std::cout << "Функции с таким номером нет\n";
                 break;
         }
+        // здесь должен быть фрагмент кода, время выполнения которого нужно измерить
+        unsigned int end_time = clock(); // конечное время
+        unsigned int search_time = end_time - start_time; // искомое время
+        std::cout << "Время, затраченное на работу функции: " << search_time << std::endl;
         std::cout << "Полученный список:" << std::endl;
-        if (lst.getHead() != NULL) {
-            for (StrL *node = lst.getHead(); node != nullptr; node = node->getNext()) {
-                std::cout << node->getData() << " ";
-            }
-            std::cout << std::endl;
-        } else std::cout << "Нет списка" << '\n';
+//        if (lst.head != NULL) {
+//            for (StrL *node = lst.head; node != nullptr; node = node->next) {
+//                std::cout << node->getData() << " ";
+//            }
+//            std::cout << std::endl;
+//        } else std::cout << "Нет списка" << '\n';
         std::cout << "Введите номер программы ";
         std::cin >> numOfOperation;
     }

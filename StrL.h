@@ -3,7 +3,7 @@
 
 
 class StrL {
-private:
+public:
     int data;
     StrL* next;
 
@@ -20,10 +20,6 @@ public:
     int getData();
 
     void setData(int data);
-
-    StrL *getNext();
-
-    void setNext(StrL *next);
 };
 
 #endif

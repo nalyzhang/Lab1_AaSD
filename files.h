@@ -6,20 +6,20 @@ class files {
 
 public:
 
+    std::ifstream inList;
     std::ifstream inL;
-    std::ifstream in;
-    std::ofstream out;
+    std::ofstream outList;
 
-    explicit files(const char in[] = "inL.txt", const char ouT[] = "out.txt", const char w[] = "in.txt") {
+    explicit files(const char in[] = "inL.txt", const char ouT[] = "outList.txt", const char w[] = "inList.txt") {
         this->inL.open(in);
-        this->out.open(ouT);
-        this->in.open(w);
+        this->outList.open(ouT);
+        this->inList.open(w);
     }
 
     ~files() {
         this->inL.close();
-        this->out.close();
-        this->in.close();
+        this->outList.close();
+        this->inList.close();
     }
 
     void result();
@@ -57,6 +57,12 @@ public:
     void function14(list &lst);
 
     void function15(list &lst);
-};
 
-#endif
+    void function19(list &lst);
+
+    void function18(list &lst);
+
+    void function17(list &lst);
+
+    void function16(list &lst);
+};

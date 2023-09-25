@@ -1,21 +1,5 @@
 #include "list.h"
 
-void list::setTail(StrL *t) {
-    this->tail = t;
-}
-
-StrL *list::getTail(){
-    return this->tail;
-}
-
-StrL *list::getHead() {
-    return this->head;
-}
-
-void list::setHead(StrL *h) {
-    this->head = h;
-}
-
 void list::pop_front() { //удаление с начала
     if (this->head == nullptr) return;
     if (this->head == this->tail) {
@@ -24,13 +8,13 @@ void list::pop_front() { //удаление с начала
         return;
     }
     StrL* node = this->head;
-    this->head = node->getNext();
+    this->head = node->next;
     delete node;
 }
 
 void list::push_front(int data) {
     StrL* node = new StrL(data);
-    node->setNext(head);
+    node->next = head;
     head = node;
     if (tail == NULL) tail = node;
 }
@@ -43,25 +27,26 @@ void list::pop_back() {
         return;
     }
     StrL* node;
-    for(node = head; node->getNext()->getNext() != NULL; node = node->getNext());
-    node->setNext(NULL);
+    for(node = head; node->next->next != NULL; node = node->next);
+    node->next = NULL;
     delete tail;
     tail = node;
 }
 
 void list::push_back(int s) { //добавление в конец
     StrL* node = new StrL(s);
-    if (this->getHead() == nullptr) this->setHead(node);
-    if (this->getTail() != nullptr) this->getTail()->setNext(node);
-    this->setTail(node);
+    if (this->head == nullptr) this->head = node;
+    if (this->tail != nullptr) this->tail->next = node;
+    this->tail = node;
 }
 
 StrL* list::getAt(int k) { //доступ к элементу
-    if (k < 0) return nullptr;
-    StrL* node = this->getHead();
+    if (k < -1) return nullptr;
+    if (k == -1) return this->head;
+    StrL* node = this->head;
     int n = 0;
-    while (node && n != k && node->getNext()) {
-        node = node->getNext();
+    while (node && n != k && node->next) {
+        node = node->next;
         n++;
     }
     return (n == k) ? node : nullptr;
@@ -71,11 +56,11 @@ StrL* list::getAt(int k) { //доступ к элементу
 void list::insert(int k, int s){ //индекс k - индекс элемента, после которого нужно вставить объект
     StrL* left = getAt(k);
     if (left == nullptr) return;
-    StrL* right = left->getNext();
+    StrL* right = left->next;
     StrL* node = new StrL(s);
-    left->setNext(node);
-    node->setNext(right);
-    if (right == nullptr) this->setTail(node);
+    left->next = node;
+    node->next = right;
+    if (right == nullptr) this->tail = node;
 }
 
 //удаление промежуточного элемента
@@ -86,10 +71,10 @@ void list::earse(int k) {
         return;
     }
     StrL* left = this->getAt(k-1);
-    StrL* node = left->getNext();
+    StrL* node = left->next;
     if (node == nullptr) return;
-    StrL* right = node->getNext();
-    left->setNext(right);
-    if (node == this->getTail()) this->setTail(left);
+    StrL* right = node->next;
+    left->next = right;
+    if (node == this->tail) this->tail = left;
     delete node;
 }

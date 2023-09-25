@@ -4,8 +4,9 @@
 #include <iostream>
 
 class list {
-private:
+public:
     StrL* head;
+    StrL* tail;
 
 public:
     list(){
@@ -18,14 +19,6 @@ public:
 
     void pop_front();
 
-    StrL *getHead();
-
-    void setHead(StrL *h);
-
-    StrL *getTail();
-
-    void setTail(StrL *t);
-
     void push_back(int s);
 
     StrL *getAt(int k);
@@ -37,8 +30,6 @@ public:
     void push_front(int data);
 
     void pop_back();
-
-    StrL* tail;
 };
 
 #endif
