@@ -52,17 +52,17 @@ public:
 
     void function12(list &list);
 
-    void function13(list &list);
+    void function13(list &list, list newList);
 
-    void function14(list &lst);
+    void function14(list &lst, list newList);
 
-    void function15(list &lst);
+    void function15(list &lst, list newList);
 
     void function19(list &lst);
 
-    void function18(list &lst);
+    void function18(list &lst, list newList);
 
-    void function17(list &lst);
+    void function17(list &lst, list newList);
 
-    void function16(list &lst);
+    void function16(list &lst, list newList);
 };

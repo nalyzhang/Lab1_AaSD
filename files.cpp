@@ -149,7 +149,7 @@ void files::function12(list& list) {
     list.head = prev;
 }
 
-void files::function13(list& lst){
+void files::function13(list& lst, list newList){
     std::cout << "\t13\tвставка другого списка в список, начиная с индекса\n"
                  "Введите номер элемента, после которого хотите вставить список" << std::endl;
     int k;
@@ -158,7 +158,6 @@ void files::function13(list& lst){
         std::cout << "Элемента с таким индексом не существует" << std::endl;
         return;
     }
-    list newList = inputNewList();
     if (newList.head == NULL) {
         std::cout << "Ввдеденный список пуст";
         return;
@@ -168,22 +167,19 @@ void files::function13(list& lst){
     for (StrL* node = newList.head; node!= NULL; node = node->next) lst.insert(k+i++, node->data);
 }
 
-void files::function14(list& lst){
+void files::function14(list& lst, list newList){
     std::cout << "\t14\tвставка другого списка в конец\n";
-    list newList = inputNewList();
     for (StrL* node = newList.head; node!= NULL; node = node->next) lst.push_back(node->data);
 }
 
-void files::function15(list& lst){
+void files::function15(list& lst, list newList){
     std::cout << "\t15\tвставка другого списка в начало\n";
-    list newList = inputNewList();
     int i = -1;
     for (StrL* node = newList.head; node!= NULL; node = node->next) lst.insert(i++, node->data);
 }
 
-void files::function16(list& lst){
+void files::function16(list& lst, list newList){
     std::cout << "\t16\tпроверка на содержание другого списка в списке, можно сделать целочисленного типа\n";
-    list newList = inputNewList();
     StrL* curr = newList.head;
     int count = 0, lenNewList = function8(newList), lenList = function8(lst);
     if (lenList < lenNewList) {
@@ -214,9 +210,8 @@ void files::function16(list& lst){
     std::cout << "Список не входит в данный" << std::endl;
 }
 
-void files::function17(list& lst) {
+void files::function17(list& lst, list newList) {
     std::cout << "\t17\tпоиск первого вхождения другого списка в список\n";
-    list newList = inputNewList();
     StrL *curr = newList.head;
     int count = 0, lenNewList = function8(newList), lenList = function8(lst), n = -1, i = 0;
     bool flag = true;
@@ -251,9 +246,8 @@ void files::function17(list& lst) {
     std::cout << "Список не входит в данный" << std::endl;
 }
 
-void files::function18(list& lst){
+void files::function18(list& lst, list newList){
     std::cout << "\t18\tпоиск последнего вхождения другого списка в список\n";
-    list newList = inputNewList();
     StrL *curr = newList.head;
     int count = 0, lenNewList = function8(newList), lenList = function8(lst), n = -1, i = 0;
     bool flag = true;
@@ -300,8 +294,9 @@ void files::function19(list& lst){
 }
 
 void files::result() {
-    list lst;
+    list lst, newList;
     this->readIn(lst);
+    newList = this->inputNewList();
     std::cout << "Список:";
     for (StrL *node = lst.head; node != nullptr; node = node->next) {
         std::cout << node->getData() << " ";
@@ -379,22 +374,22 @@ void files::result() {
                 function12(lst);
                 break;
             case(13):
-                function13(lst);
+                function13(lst, newList);
                 break;
             case(14):
-                function14(lst);
+                function14(lst, newList);
                 break;
             case(15):
-                function15(lst);
+                function15(lst, newList);
                 break;
             case(16):
-                function16(lst);
+                function16(lst, newList);
                 break;
             case(17):
-                function17(lst);
+                function17(lst, newList);
                 break;
             case(18):
-                function18(lst);
+                function18(lst, newList);
                 break;
             case(19):
                 function19(lst);
@@ -411,17 +406,16 @@ void files::result() {
                 std::cout << "Функции с таким номером нет\n";
                 break;
         }
-        // здесь должен быть фрагмент кода, время выполнения которого нужно измерить
         unsigned int end_time = clock(); // конечное время
         unsigned int search_time = end_time - start_time; // искомое время
         std::cout << "Время, затраченное на работу функции: " << search_time << std::endl;
         std::cout << "Полученный список:" << std::endl;
-//        if (lst.head != NULL) {
-//            for (StrL *node = lst.head; node != nullptr; node = node->next) {
-//                std::cout << node->getData() << " ";
-//            }
-//            std::cout << std::endl;
-//        } else std::cout << "Нет списка" << '\n';
+        if (lst.head != NULL) {
+            for (StrL *node = lst.head; node != nullptr; node = node->next) {
+                std::cout << node->getData() << " ";
+            }
+            std::cout << std::endl;
+        } else std::cout << "Нет списка" << '\n';
         std::cout << "Введите номер программы ";
         std::cin >> numOfOperation;
     }
