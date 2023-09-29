@@ -8,17 +8,14 @@ public:
 
     std::ifstream inList;
     std::ifstream inL;
-    std::ofstream outList;
 
-    explicit files(const char in[] = "inL.txt", const char ouT[] = "outList.txt", const char w[] = "inList.txt") {
+    explicit files(const char in[] = "inL.txt", const char w[] = "inList.txt") {
         this->inL.open(in);
-        this->outList.open(ouT);
         this->inList.open(w);
     }
 
     ~files() {
         this->inL.close();
-        this->outList.close();
         this->inList.close();
     }
 
@@ -26,7 +23,7 @@ public:
 
     void readIn(list& list);
 
-    list inputNewList();
+    void inputNewList(list &list);
 
     void function1(list &list);
 
@@ -52,17 +49,17 @@ public:
 
     void function12(list &list);
 
-    void function13(list &list, list newList);
+    void function13(list &list, class list &newList);
 
-    void function14(list &lst, list newList);
+    void function14(list &lst, list &newList);
 
-    void function15(list &lst, list newList);
+    void function15(list &lst, list &newList);
 
     void function19(list &lst);
 
-    void function18(list &lst, list newList);
+    void function18(list &lst, list &newList);
 
-    void function17(list &lst, list newList);
+    void function17(list &lst, list &newList);
 
-    void function16(list &lst, list newList);
+    void function16(list &lst, list& newList);
 };

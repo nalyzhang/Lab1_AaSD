@@ -1,28 +1,6 @@
 #include "files.h"
 #include <iostream>
 
-/*
-    1	добавление в конец списка \/
-	2	добавление в начало списка \/
-	3	удаление последнего элемента \/
-	4	удаление первого элемента \/
-	5	добавление элемента по индексу (вставка перед элементом, который был ранее доступен по этому индексу) \/
-	6	получение элемента по индексу \/
-	7	удаление элемента по индексу \/
-	8	получение размера списка \/
-	9	удаление всех элементов списка \/
-	10	замена элемента по индексу на передаваемый элемент \/
-	11	проверка на пустоту списка \/
-	12	меняет порядок элементов в списке на обратный \/
-	13	вставка другого списка в список, начиная с индекса \/
-	14	вставка другого списка в конец \/
-	15	вставка другого списка в начало \/
-	16	проверка на содержание другого списка в списке, можно сделать целочисленного типа
-	17	поиск первого вхождения другого списка в список
-	18	поиск последнего вхождения другого списка в список
-	19	обмен двух элементов списка по индексам
- */
-
 void files::readIn(list& list) {
     if (this->inList.is_open() == 1) {
         int node;
@@ -35,8 +13,7 @@ void files::readIn(list& list) {
     }
 }
 
-list files::inputNewList(){
-    list list;
+void files::inputNewList(list& list){
     if (this->inL.is_open() == 1) {
         int node;
         if (this->inL.eof() == 0) {
@@ -46,7 +23,6 @@ list files::inputNewList(){
             }
         }
     }
-    return list;
 }
 
 void files::function1(list& list){
@@ -135,7 +111,6 @@ void files::function11(list &list) {
 }
 
 void files::function12(list& list) {
-    //todo: переделать функцию
     std::cout << "\t12\tменяет порядок элементов в списке на обратный\n";
     StrL *curr, *next, *prev = NULL;
     list.tail = list.head;
@@ -149,7 +124,7 @@ void files::function12(list& list) {
     list.head = prev;
 }
 
-void files::function13(list& lst, list newList){
+void files::function13(list& lst, list& newList){
     std::cout << "\t13\tвставка другого списка в список, начиная с индекса\n"
                  "Введите номер элемента, после которого хотите вставить список" << std::endl;
     int k;
@@ -167,110 +142,99 @@ void files::function13(list& lst, list newList){
     for (StrL* node = newList.head; node!= NULL; node = node->next) lst.insert(k+i++, node->data);
 }
 
-void files::function14(list& lst, list newList){
+void files::function14(list& lst, list& newList){
     std::cout << "\t14\tвставка другого списка в конец\n";
     for (StrL* node = newList.head; node!= NULL; node = node->next) lst.push_back(node->data);
 }
 
-void files::function15(list& lst, list newList){
+void files::function15(list& lst, list& newList){
     std::cout << "\t15\tвставка другого списка в начало\n";
     int i = -1;
     for (StrL* node = newList.head; node!= NULL; node = node->next) lst.insert(i++, node->data);
 }
 
-void files::function16(list& lst, list newList){
+void files::function16(list& lst, list& newList){
     std::cout << "\t16\tпроверка на содержание другого списка в списке, можно сделать целочисленного типа\n";
     StrL* curr = newList.head;
-    int count = 0, lenNewList = function8(newList), lenList = function8(lst);
+    if (curr == nullptr) return;
+    int count = 1, lenNewList = function8(newList), lenList = function8(lst);
     if (lenList < lenNewList) {
         std::cout << "Заданный список не может входить в данный в силу большего размера" << std::endl;
         return;
     }
     for (StrL* node = lst.head; node != nullptr; node = node->next){
-        if (curr == nullptr)
-        {
-            std::cout << "Список входит в данный" << std::endl;
-            return;
-        }
         if (curr->data == node->data) {
-            count++;
-            curr = curr->next;
-        }
-        else {
+            StrL *tmp = node;
+            while (curr != nullptr) {
+                if (curr->data == tmp->data) count++;
+                curr = curr->next;
+                tmp = tmp->next;
+            }
             if (count == lenNewList) {
                 std::cout << "Список входит в данный" << std::endl;
                 return;
             }
-            else {
-                count = 0;
-                curr = newList.head;
-            }
+            count = 1;
+            curr = newList.head;
         }
     }
     std::cout << "Список не входит в данный" << std::endl;
 }
 
-void files::function17(list& lst, list newList) {
+void files::function17(list& lst, list& newList) {
     std::cout << "\t17\tпоиск первого вхождения другого списка в список\n";
-    StrL *curr = newList.head;
-    int count = 0, lenNewList = function8(newList), lenList = function8(lst), n = -1, i = 0;
-    bool flag = true;
+    StrL* curr = newList.head;
+    int n, i = 0;
+    if (curr == nullptr) return;
+    int count = 1, lenNewList = function8(newList), lenList = function8(lst);
     if (lenList < lenNewList) {
         std::cout << "Заданный список не может входить в данный в силу большего размера" << std::endl;
         return;
     }
-    for (StrL *node = lst.head; node != nullptr; node = node->next) {
-        if (curr == nullptr) {
-            std::cout << "Первое вхождение списка в данный начинается с индекса " << n << std::endl;
-            return;
-        }
+    for (StrL* node = lst.head; node != nullptr; node = node->next){
         if (curr->data == node->data) {
-            if (flag) {
-                n = i;
-                flag = false;
+            n = i;
+            StrL* tmp = node;
+            while (curr != nullptr) {
+                if (curr->data == tmp->data) count++;
+                curr = curr->next;
+                tmp = tmp->next;
             }
-            count++;
-            curr = curr->next;
-        } else {
             if (count == lenNewList) {
                 std::cout << "Первое вхождение списка в данный начинается с индекса " << n << std::endl;
                 return;
-            } else {
-                count = 0;
-                curr = newList.head;
-                flag = true;
             }
+            count = 1;
+            curr = newList.head;
         }
         i++;
     }
     std::cout << "Список не входит в данный" << std::endl;
 }
 
-void files::function18(list& lst, list newList){
+void files::function18(list& lst, list& newList){
     std::cout << "\t18\tпоиск последнего вхождения другого списка в список\n";
     StrL *curr = newList.head;
-    int count = 0, lenNewList = function8(newList), lenList = function8(lst), n = -1, i = 0;
-    bool flag = true;
+    int count = 1, lenNewList = function8(newList), lenList = function8(lst), n = -1, i = 0, h = 0;
     if (lenList < lenNewList) {
         std::cout << "Заданный список не может входить в данный в силу большего размера" << std::endl;
         return;
     }
-    for (StrL *node = lst.head; node != nullptr; node = node->next) {
-        i++;
-        if (curr == nullptr || (curr->data != node->data)) {
-            count = 0;
-            curr = newList.head;
-            flag = true;
-            continue;
-        }
+    for (StrL* node = lst.head; node != nullptr; node = node->next) {
         if (curr->data == node->data) {
-            if (flag) {
-                n = i-1;
-                flag = false;
+            h = i;
+            StrL *tmp = node;
+            while (curr != nullptr) {
+                if (curr->data == tmp->data) count++;
+                curr = curr->next;
+                tmp = tmp->next;
             }
-            count++;
-            curr = curr->next;
+            if (count == lenNewList)
+                n = h;
+            count = 1;
+            curr = newList.head;
         }
+        i++;
     }
     if (n >= 0) std::cout << "Последнее вхождение списка в данный начинается с индекса " << n << std::endl;
     else std::cout << "Список не входит в данный" << std::endl;
@@ -296,7 +260,7 @@ void files::function19(list& lst){
 void files::result() {
     list lst, newList;
     this->readIn(lst);
-    newList = this->inputNewList();
+    this->inputNewList(newList);
     std::cout << "Список:";
     for (StrL *node = lst.head; node != nullptr; node = node->next) {
         std::cout << node->getData() << " ";
@@ -397,9 +361,9 @@ void files::result() {
             case(20):
                 std::cout << "Конечный список:" << std::endl;
                 for (StrL *node = lst.head; node != nullptr; node = node->next) {
-                    this->outList << node->getData() << " ";
+                    std::cout << node->getData() << " ";
                 }
-                this->outList << std::endl;
+                std::cout << std::endl;
                 std::cout << "выход из программы.\n";
                 break;
             default:
